@@ -46,7 +46,8 @@ const Contact = () => {
         from_name: formData.name,
         from_email: formData.email,
         message: formData.message,
-        to_name: 'Michael Kagiaogloy',
+        to_name: 'Michael Kagiaoglou',
+        to_email: 'mkagiaogloy@gmail.com', // Set your email as the recipient
         reply_to: formData.email,
       };
 
