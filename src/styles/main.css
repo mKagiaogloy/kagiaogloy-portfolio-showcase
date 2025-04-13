@@ -1,0 +1,13 @@
+
+/* Additional custom styles can be added here */
+/* These styles will complement the Tailwind CSS utilities already in use */
+
+/* Example of custom utility classes that could be added:
+.custom-transition {
+  transition: all 0.3s ease;
+}
+
+.custom-shadow {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+*/
