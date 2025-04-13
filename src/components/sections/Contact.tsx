@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
+import emailjs from 'emailjs-com';
 
 const Contact = () => {
   const { toast } = useToast();
@@ -13,13 +14,14 @@ const Contact = () => {
     email: "",
     message: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Simple validation
@@ -32,15 +34,41 @@ const Contact = () => {
       return;
     }
 
-    // In a real application, you would send the form data to a server
-    // For now, we'll just simulate success
-    toast({
-      title: "Message sent!",
-      description: "Thank you for reaching out. I'll get back to you soon.",
-    });
+    setIsLoading(true);
 
-    // Reset form
-    setFormData({ name: "", email: "", message: "" });
+    try {
+      // Replace these with your own EmailJS service ID, template ID, and user ID
+      const serviceId = 'YOUR_SERVICE_ID';
+      const templateId = 'YOUR_TEMPLATE_ID';
+      const userId = 'YOUR_USER_ID';
+      
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        message: formData.message,
+        to_name: 'Michael Kagiaogloy',
+        reply_to: formData.email,
+      };
+
+      await emailjs.send(serviceId, templateId, templateParams, userId);
+      
+      toast({
+        title: "Message sent!",
+        description: "Thank you for reaching out. I'll get back to you soon.",
+      });
+
+      // Reset form
+      setFormData({ name: "", email: "", message: "" });
+    } catch (error) {
+      console.error("Error sending email:", error);
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -101,6 +129,7 @@ const Contact = () => {
                   value={formData.name}
                   onChange={handleChange}
                   className="bg-background"
+                  disabled={isLoading}
                 />
               </div>
               
@@ -112,6 +141,7 @@ const Contact = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className="bg-background"
+                  disabled={isLoading}
                 />
               </div>
               
@@ -123,12 +153,17 @@ const Contact = () => {
                   onChange={handleChange}
                   rows={5}
                   className="bg-background"
+                  disabled={isLoading}
                 />
               </div>
               
-              <Button type="submit" className="w-full flex items-center gap-2">
+              <Button 
+                type="submit" 
+                className="w-full flex items-center gap-2"
+                disabled={isLoading}
+              >
                 <Send className="h-4 w-4" />
-                Send Message
+                {isLoading ? "Sending..." : "Send Message"}
               </Button>
             </form>
           </div>
